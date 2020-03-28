@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <title>
+        Mini Drawing Application
+    </title>
+ 
+    <meta name="viewport" content="width=device-width" />
+ 
+   <script src="jspdf.min.js"></script>
+   <script src="pdf.min.js"></script>
+   <script src="fabric.min.js"></script>
+   <script src="jquery.min.js"></script>
+ <link rel="stylesheet" href="bootstrap/js/bootstrap.min.js">
+ <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+</head>
+<body style="background-image: url('images/background.jpg');background-repeat:no-repeat;background-attachment:fixed;background-size:cover;">
+<div class="container-fluid">
+    <div class="row">
+    <div class="col-lg-12">
+    <p style="margin-bottom:0px;margin-top:3px;">
+    <strong>IMPORT IMAGE : &nbsp;</strong><input type="file" id="file"  class="btn btn-info" style="width:265px;height:28px;padding-top:0px;">
+    <input type="button" value="CLEAR WORK AREA" class="btn btn-info" style="height:28px;padding-top:0px;" id="clearCanvas" onclick="clearCanvas();" />
+    <label for="canvas-background-color">Background Color</label>
+    <input type="color" value="" id="canvas-background-color" style="height:20px;padding-top:0px;">&nbsp;
+    <label for="image-opacity" style="display:inline-block">Opacity</label>
+      <select id="image-opacity" class="btn btn-info" style="width:63px;height:28px;padding-top:0px;">
+        <option value="1.0">1.0</option>
+        <option value="0.90">0.90</option>
+        <option value="0.80">0.80</option>
+        <option value="0.70">0.70</option>
+        <option value="0.60">0.60</option>
+        <option value="0.50">0.50</option>
+        <option value="0.40">0.40</option>
+        <option value="0.30">0.30</option>
+      </select>
+    <span style="float:right;"><strong>EXPORT : &nbsp;</strong><button id="download" class="btn btn-danger" style="width:120px;height:28px;padding-top:0px;">SAVE AS PDF</button>
+    <a href="#" class="button" id="btn-download-jpg"><input type="button" value="SAVE AS JPG" class="btn btn-danger" hidden="hidden"></a>
+    <a href="#" class="button" id="btn-download-png"><input type="button" value="SAVE AS IMAGE" class="btn btn-danger" style="width:130px;height:28px;padding-top:0px;"></a></span>
+    </p>
+    <p style="margin-bottom:2px;">
+    <label for="font-family" style="display:inline-block">Font family:</label>
+     <select id="font-family" class="btn btn-info" style="width:130px;height:28px;padding-top:0px;">
+        <option value="arial">Arial</option>
+        <option value="helvetica" selected>Helvetica</option>
+        <option value="myriad pro">Myriad Pro</option>
+        <option value="delicious">Delicious</option>
+        <option value="verdana">Verdana</option>
+        <option value="georgia">Georgia</option>
+        <option value="courier">Courier</option>
+        <option value="comic sans ms">Comic Sans MS</option>
+        <option value="impact">Impact</option>
+        <option value="monaco">Monaco</option>
+        <option value="optima">Optima</option>
+        <option value="hoefler text">Hoefler Text</option>
+        <option value="plaster">Plaster</option>
+        <option value="engagement">Engagement</option>
+      </select>
+      <label for="text-align" style="display:inline-block">Text align:</label>
+      <select id="text-align" class="btn btn-info" style="width:90px;height:28px;padding-top:0px;">
+        <option value="left">Left</option>
+        <option value="center">Center</option>
+        <option value="right">Right</option>
+        <option value="justify">Justify</option>
+      </select>
+      <label for="text-font-size">Font size:</label>
+      <input type="range" value="" min="1" max="120" step="1" id="text-font-size" style="width:150px;">
+      <label for="text-stroke-color">Stroke color:</label>
+      <input type="color" value="" id="text-stroke-color">
+      <label for="text-stroke-width">Stroke width:</label>
+      <input type="range" value="1" min="1" max="5" id="text-stroke-width" style="width:100px;">&nbsp;
+      <label for="angle" style="display:inline-block">Angle</label>
+      <select id="angle" class="btn btn-info" style="width:70px;height:28px;padding-top:0px;">
+        <option value="30">30</option>
+        <option value="45">45</option>
+        <option value="60">60</option>
+        <option value="90">90</option>
+        <option value="120">120</option>
+        <option value="150">150</option>
+        <option value="180">180</option>
+        <option value="270">270</option>
+        <option value="360">360</option>
+      </select>&nbsp;
+      Font: &nbsp;
+      <img src="images/bold.png" style="width:25px;height:20px;" id="btn-bold" title="Bold">
+      <img src="images/italic.png" style="width:25px;height:20px;" id="btn-italic" title="Italic">
+    </p>
+    </div></div>
+    <div class="row">
+     <div class="col-lg-2">
+     Add Shapes
+    <p style="margin-bottom:2px;"><img src="images/circle.png" style="width:25px;height:25px;" title="Circle" onclick="onSolidCircle();">&nbsp;
+    <img src="images/rectangle.png" style="width:25px;height:25px;" title="Rectangle" onclick="onSolidRect();">&nbsp;
+    <img src="images/traingle.png" style="width:25px;height:25px;" title="Triangle" onclick="onSolidTriangle();">&nbsp;
+    <img src="images/line.png" style="width:25px;height:25px;" title="Line" onclick="onSolidLine();">&nbsp;
+    <img src="images/text box.png" style="width:40px;height:30px;" title="Text Box" onclick="Addtext();">
+   </p>
+    Free Drawing
+    <p style="margin-bottom:2px;">
+    <img src="images/start.png" style="width:35px;height:25px;" title="Start Drawing" onclick="onStartDrawing();">
+    <img src="images/stop.png" style="width:35px;height:25px;" title="Stop Drawing" onclick="onStopDrawing();">
+    <select id="brushwidth" style="width:45px;height:30px;" class="btn btn-info">
+        <option value="4">4</option>
+        <option value="6">6</option>
+        <option value="8">8</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+        <option value="35">35</option>
+        <option value="40">40</option>
+      </select>
+      <input id="brushcolor" type="color" style="width:50px;">
+      <img src="images/circlebrush.jpg" style="width:35px;height:25px;" title="Circle Brush" onclick="circlebrush();">
+      <img src="images/patternbrush.jpg" style="width:35px;height:25px;" title="Pattern Brush" onclick="patternbrush();">
+      <img src="images/spraybrush.png" style="width:35px;height:25px;" title="Spray Brush" onclick="SprayBrush();">
+    </p>
+    Zoom Function
+    <p style="margin-bottom:2px;">
+    <img src="images/zoom in.png" style="width:35px;height:25px;" title="Zoom IN" onclick="onZoomIn();">&nbsp;
+    <img src="images/zoom out.png" style="width:35px;height:25px;" title="Zoom Out" onclick="onZoomOut();">&nbsp;
+    <img src="images/zoom reset.jpg" style="width:35px;height:25px;" title="Zoom Reset" onclick="onResetZoom();">
+    <select id="shadow" class="btn btn-danger" style="width:45px;height:28px;padding-top:0px;" title="Set Shadow">
+        <option value="rgba(0,0,0,0.3) 5px 5px 5px">rgba(0,0,0,0.3) 5px 5px 5px</option>
+        <option value="rgba(0,0,0,0.6) -6px -6px 6px">rgba(0,0,0,0.6) -6px -6px 6px</option>
+        <option value="rgba(0,0,0,0.3) 7px 7px 7px">rgba(0,0,0,0.9) 7px 7px 7px</option>
+        <option value="rgba(0,0,0,0.9) -8px -8px 8px">rgba(0,0,0,0.3) -8px -8px 8px</option>
+        <option value="rgba(0,0,0,0.3) 9px 9px 9px">rgba(0,0,0,0.3) 9px 9px 9px</option>
+        <option value="green -9px -9px 3px">green -9px 9px 3px</option>
+        <option value="green 5px 5px 3px">green 5px 5px 3px</option>
+        <option value="red -5px -5px 3px">red -5px -5px 3px</option>
+        <option value="red 5px 5px 3px">red 5px 5px 3px</option>
+        <option value="yellow -5px -5px 3px">yellow -5px -5px 3px</option>
+        <option value="yellow 5px 5px 3px">yellow 5px 5px 3px</option>
+      </select>
+    </p>
+    <p style="margin-bottom:2px;">Change Color Of selected Object : <input id="color" type="color"></p>
+    <p style="margin-bottom:2px;">
+    Send Selected Object<br>
+    <img src="images/front.png" style="width:40px;height:25px;" id="tofront" title="Send Front">&nbsp;
+    <img src="images/back.png" style="width:40px;height:25px;" id="toback" title="Send Back">&nbsp;
+    <img src="images/delete.png" style="width:35px;height:25px;" id="delete" title="Delete Items">&nbsp;
+    </p>
+     <p style="margin-bottom:2px;">
+     Eraser :&nbsp;
+     <img src="images/eraser.jpg" style="width:35px;height:25px;"  id="brush" title="Start Erasing">
+     <img src="images/stop.png" style="width:35px;height:25px;" title="Stop Erasing" onclick="stoperaser();">
+     </p>
+     <label title="Add a background" class="myFile2"><span class="mdi mdi-image"> Add Image Watermark</span>&nbsp;
+     <input type="file" id="file2" />
+     </label>
+     <p style="margin-bottom:2px;">
+     Border
+     <select style="width:50px;height:30px;" class="btn btn-info" title="Border Size">
+        <option id="imageborder1">1</option>
+        <option id="imageborder2">2</option>
+        <option id="imageborder3">3</option>
+        <option id="imageborder4">4</option>
+        <option id="imageborder5">5</option>
+        <option id="imageborder6">6</option>
+        <option id="imageborder7">7</option>
+        <option id="imageborder8">8</option>
+        <option id="imageborder9">9</option>
+        <option id="imageborder10">10</option>
+        <option id="imageborder15">15</option>
+        <option id="imageborder20">20</option>
+      </select>
+     <input id="image-stroke-color" type="color" title="Border Color" style="width:40px;">
+     <img src="images/dash.png" style="width:30px;height:25px;" title="Dashed Border" id="borderswidth">
+     </p>
+    </div>
+
+    <div class="col-lg-9">
+    <table>
+    <tr>
+    <td style="background-color:white;">
+    <canvas id="canvas" width="1045" height="500" style="border: 1px solid black"></canvas>
+    </td>
+    </tr>
+    </table>
+    </div>
+</div>
+</div>
+    <script src="core.js"></script>
+  
+</body>
+</html>
