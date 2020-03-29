@@ -625,6 +625,27 @@
         canvas.renderAll();
         });
 
+	
+        //underline
+        document.getElementById('btn-underline').addEventListener('click', function() {
+        canvas.getActiveObject().set({underline: true
+        });
+        canvas.renderAll();
+        });
+
+        //linethrough
+        document.getElementById('btn-linethrough').addEventListener('click', function() {
+        canvas.getActiveObject().set({linethrough: true
+        });
+        canvas.renderAll();
+        });
+
+        //overline
+        document.getElementById('btn-overline').addEventListener('click', function() {
+        canvas.getActiveObject().set({overline: true
+        });
+        canvas.renderAll();
+        });
 
 
 
